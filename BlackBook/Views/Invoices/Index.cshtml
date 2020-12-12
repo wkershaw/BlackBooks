@@ -1,0 +1,41 @@
+﻿@model IEnumerable<BlackBook.Models.InvoiceViewModel>
+
+@{
+    ViewData["Title"] = "Invoices";
+}
+
+<h1>Invoices</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Product Count</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var invoice in Model) {
+        <tr>
+            <td>
+                @invoice.Id
+            </td>
+            <td>
+                @invoice.Customer.Name
+            </td>
+            <td>
+                @invoice.Products.Count
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@invoice.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@invoice.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@invoice.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
