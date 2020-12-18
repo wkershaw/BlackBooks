@@ -29,19 +29,20 @@ namespace BlackBook.Controllers
             foreach(InvoiceModel invoice in _context.Invoices.ToList())
             {
                 InvoiceViewModel viewModel = new InvoiceViewModel();
-                Dictionary<ProductModel, int> productDictionary = new Dictionary<ProductModel, int>();
+                viewModel.Id = invoice.Id;
 
-                foreach(InvoiceProductModel invoiceProduct in _context.InvoiceProducts.Where(ip => ip.Invoice.Id == invoice.Id)){
-                    productDictionary.Add(await _context.Products.FirstOrDefaultAsync(p => p.Id == invoiceProduct.ProductId), invoiceProduct.qty);
-                }
-
-                CustomerModel Customer = (await _context.InvoiceCustomer
+                viewModel.Customer = (await _context.InvoiceCustomer
                     .Include(Ic => Ic.Customer)
                     .FirstOrDefaultAsync(ic => ic.InvoiceId == invoice.Id)).Customer;
 
-                viewModel.Id = invoice.Id;
-                viewModel.Products = productDictionary;
-                viewModel.Customer = Customer;
+
+                viewModel.ProductIds = new List<int>();
+                viewModel.Qtys = new List<int>();
+                foreach(InvoiceProductModel invoiceProduct in _context.InvoiceProducts.Where(ip => ip.Invoice.Id == invoice.Id)){
+                    viewModel.ProductIds.Add(invoiceProduct.ProductId);
+                    viewModel.Qtys.Add(invoiceProduct.qty);
+                }
+
                 Invoices.Add(viewModel);
             }
             return View(Invoices);
@@ -82,5 +83,32 @@ namespace BlackBook.Controllers
             }
             return View(invoiceView);
         }       
+
+        public async Task<IActionResult> Details(int Id)
+        {
+            InvoiceViewModel viewModel = new InvoiceViewModel();
+            viewModel.Id = Id;
+
+            viewModel.Customer = (await _context.InvoiceCustomer
+                .Include(Ic => Ic.Customer)
+                .FirstOrDefaultAsync(ic => ic.InvoiceId == Id)).Customer;
+
+
+            viewModel.ProductIds = new List<int>();
+            viewModel.Qtys = new List<int>();
+            viewModel.Products = new List<InvoiceProductModel>();
+            foreach (InvoiceProductModel invoiceProduct in _context.InvoiceProducts.Where(ip => ip.Invoice.Id == Id).Include(ip => ip.Product))
+            {
+                InvoiceProductModel ipModel = new InvoiceProductModel()
+                {
+                    ProductId = invoiceProduct.ProductId,
+                    Product = invoiceProduct.Product,
+                    qty = invoiceProduct.qty
+                };
+                viewModel.Products.Add(ipModel);
+            }
+
+            return View(viewModel);
+        }
     }
 }

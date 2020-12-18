@@ -10,6 +10,8 @@ namespace BlackBook.Models
         public int Id { get; set; }
         public int CustomerId { get; set; }
         public CustomerModel Customer { get; set; }
-        public IDictionary<ProductModel,int> Products { get; set; }
+        public List<int> ProductIds { get; set; }
+        public List<int> Qtys { get; set; }
+        public List<InvoiceProductModel> Products{get;set;}
     }
 }

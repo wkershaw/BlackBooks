@@ -1,0 +1,29 @@
+﻿@model BlackBook.Models.InvoiceViewModel
+
+@{
+    ViewData["Title"] = "Invoice for: " + Model.Customer.Name;
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h2>
+    Customer: @Model.Customer.Name
+</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product ID</th>
+            <th>Qty</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach(var productOrder in Model.Products)
+    {
+        <tr>
+            <td>@productOrder.Product.Name</td>
+            <td>@productOrder.qty</td>
+        </tr>
+    }
+    </tbody>
+</table>

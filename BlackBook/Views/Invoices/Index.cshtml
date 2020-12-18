@@ -4,7 +4,7 @@
     ViewData["Title"] = "Invoices";
 }
 
-<h1>Invoices</h1>
+<h1>@ViewData["Title"]</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -28,12 +28,10 @@
                 @invoice.Customer.Name
             </td>
             <td>
-                @invoice.Products.Count
+                @invoice.Qtys.Sum()
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@invoice.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@invoice.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@invoice.Id">Delete</a>
+                <a asp-action="Details" asp-route-id="@invoice.Id">Details</a>
             </td>
         </tr>
 }
